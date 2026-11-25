@@ -1,0 +1,52 @@
+<%- include("partials/head", { pageTitle: "Add a book" }) %>
+
+<a class="back" href="/">&larr; Back to my diary</a>
+<h1 class="page-title">Add a book</h1>
+
+<!-- Step 1: search Open Library by title (uses Axios on the server) -->
+<section class="card">
+  <h3>1. Find the book</h3>
+  <form action="/add" method="GET" class="search">
+    <input type="search" name="title" value="<%= title %>" placeholder="Type a title, for example Oliver Twist" aria-label="Book title" />
+    <button type="submit" class="btn btn-solid">Search Open Library</button>
+  </form>
+
+  <% if (searchError) { %><p class="notice"><%= searchError %></p><% } %>
+
+  <% if (results.length > 0) { %>
+    <p class="meta">Click "Use this book" on the right one.</p>
+    <div class="results">
+      <% results.forEach(function (r) { %>
+        <div class="result">
+          <% const rUrl = r.cover_id ? "https://covers.openlibrary.org/b/id/" + r.cover_id + "-M.jpg?default=false" : null; %>
+          <div class="cover cover-small">
+            <% if (rUrl) { %><img src="<%= rUrl %>" alt="" loading="lazy" onerror="coverFailed(this)" /><% } %>
+            <div class="cover-placeholder" <% if (rUrl) { %>style="display:none"<% } %>><span><%= r.title %></span></div>
+          </div>
+          <div class="result-info">
+            <strong><%= r.title %></strong>
+            <span class="meta"><%= r.author %><%= r.year ? ", " + r.year : "" %></span>
+          </div>
+          <button type="button" class="btn use-book"
+            data-title="<%= r.title %>"
+            data-author="<%= r.author %>"
+            data-year="<%= r.year %>"
+            data-cover-id="<%= r.cover_id %>"
+            data-isbn="<%= r.isbn %>">Use this book</button>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</section>
+
+<!-- Step 2: add your rating and notes, then save -->
+<section class="card">
+  <h3>2. Your rating and notes</h3>
+  <% if (error) { %><p class="notice error"><%= error %></p><% } %>
+  <form action="/add" method="POST" class="book-form">
+    <%- include("partials/book-fields", { f: form }) %>
+    <button type="submit" class="btn btn-solid">Save book</button>
+  </form>
+</section>
+
+<%- include("partials/foot") %>

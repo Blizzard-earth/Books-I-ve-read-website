@@ -1,0 +1,34 @@
+<%- include("partials/head", { pageTitle: book.title }) %>
+
+<a class="back" href="/">&larr; Back to my diary</a>
+
+<article class="book-page">
+  <div class="book-cover-big">
+    <%- include("partials/cover", { book: book, size: "L" }) %>
+  </div>
+
+  <div class="book-detail">
+    <h1><%= book.title %></h1>
+    <p class="author">
+      <%= book.author || "Unknown author" %><% if (book.first_publish_year) { %>, first published <%= book.first_publish_year %><% } %>
+    </p>
+    <p class="stars big-stars" aria-label="Rated <%= book.rating %> out of 5"><%= stars(book.rating) %> <span class="meta"><%= book.rating %> / 5</span></p>
+    <p class="meta">Read on <%= formatDate(book.date_read) %></p>
+
+    <h3>My notes</h3>
+    <% if (book.notes) { %>
+      <div class="notes"><%= book.notes %></div>
+    <% } else { %>
+      <p class="meta">No notes yet. Click Edit to write some.</p>
+    <% } %>
+
+    <div class="actions">
+      <a class="btn" href="/book/<%= book.id %>/edit">Edit</a>
+      <form action="/book/<%= book.id %>/delete" method="POST" class="inline" data-confirm="Delete this book and its notes?">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+  </div>
+</article>
+
+<%- include("partials/foot") %>

@@ -1,0 +1,10 @@
+<%# Shows the cover image, or a brown placeholder if there is no cover. Needs: book, size (S/M/L) %>
+<% const url = coverUrl(book, size || "M"); %>
+<div class="cover">
+  <% if (url) { %>
+    <img src="<%= url %>" alt="Cover of <%= book.title %>" loading="lazy" onerror="coverFailed(this)" />
+  <% } %>
+  <div class="cover-placeholder" <% if (url) { %>style="display:none"<% } %>>
+    <span><%= book.title %></span>
+  </div>
+</div>

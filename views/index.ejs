@@ -1,0 +1,59 @@
+<%- include("partials/head", { pageTitle: "Home", hero: true }) %>
+
+<!-- Total number of books -->
+<p class="total">
+  <% if (q) { %>
+    Showing <strong><%= books.length %></strong> of <strong><%= total %></strong> books I've read
+  <% } else { %>
+    <strong><%= total %></strong> <%= total === 1 ? "book" : "books" %> I've read
+  <% } %>
+</p>
+
+<!-- Sort buttons + search bar + add button -->
+<section class="toolbar">
+  <nav class="sorts" aria-label="Sort books">
+    <a class="pill <%= sort === 'top' ? 'active' : '' %>" href="/?sort=top<%= q ? '&q=' + encodeURIComponent(q) : '' %>">Top rated</a>
+    <a class="pill <%= sort === 'newest' ? 'active' : '' %>" href="/?sort=newest<%= q ? '&q=' + encodeURIComponent(q) : '' %>">Newest</a>
+    <a class="pill <%= sort === 'title' ? 'active' : '' %>" href="/?sort=title<%= q ? '&q=' + encodeURIComponent(q) : '' %>">Title</a>
+  </nav>
+
+  <form class="search" action="/" method="GET">
+    <input type="hidden" name="sort" value="<%= sort %>" />
+    <input type="search" name="q" value="<%= q %>" placeholder="Search by title or author" aria-label="Search books" />
+    <button type="submit" class="btn">Search</button>
+    <% if (q) { %><a class="clear" href="/?sort=<%= sort %>">Clear</a><% } %>
+  </form>
+
+  <a class="btn btn-solid" href="/add">+ Add a book</a>
+</section>
+
+<!-- All the books, one after another -->
+<section class="book-list">
+  <% if (books.length === 0) { %>
+    <div class="empty">
+      <% if (q) { %>
+        <h2>No matches</h2>
+        <p>No book matches "<%= q %>". Try another title or author.</p>
+      <% } else { %>
+        <h2>Add your first book</h2>
+        <p>Your shelf is empty. Search for a book and write your first note.</p>
+        <a class="btn btn-solid" href="/add">Add a book</a>
+      <% } %>
+    </div>
+  <% } %>
+
+  <% books.forEach(function (book) { %>
+    <a class="book-row" href="/book/<%= book.id %>">
+      <%- include("partials/cover", { book: book, size: "M" }) %>
+      <div class="book-info">
+        <h2><%= book.title %></h2>
+        <% if (book.author) { %><p class="author"><%= book.author %></p><% } %>
+        <p class="stars" aria-label="Rated <%= book.rating %> out of 5"><%= stars(book.rating) %></p>
+        <p class="meta">Read on <%= formatDate(book.date_read) %></p>
+        <% if (book.summary) { %><p class="summary"><%= book.summary %></p><% } %>
+      </div>
+    </a>
+  <% }) %>
+</section>
+
+<%- include("partials/foot") %>

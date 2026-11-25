@@ -1,0 +1,14 @@
+<%- include("partials/head", { pageTitle: "Edit " + (book.title || "book") }) %>
+
+<a class="back" href="/book/<%= book.id %>">&larr; Back to the book</a>
+<h1 class="page-title">Edit book</h1>
+
+<section class="card">
+  <% if (error) { %><p class="notice error"><%= error %></p><% } %>
+  <form action="/book/<%= book.id %>/edit" method="POST" class="book-form">
+    <%- include("partials/book-fields", { f: book }) %>
+    <button type="submit" class="btn btn-solid">Save changes</button>
+  </form>
+</section>
+
+<%- include("partials/foot") %>

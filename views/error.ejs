@@ -1,0 +1,9 @@
+<%- include("partials/head", { pageTitle: "Error" }) %>
+
+<div class="empty">
+  <h2><%= status === 404 ? "Not found" : "Something went wrong" %></h2>
+  <p><%= message %></p>
+  <a class="btn btn-solid" href="/">Back to my diary</a>
+</div>
+
+<%- include("partials/foot") %>
